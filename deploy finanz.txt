@@ -1,0 +1,17 @@
+---NETWORK---
+
+docker network create finanz_network
+
+####################################################################
+
+---MARIADB---
+
+docker run -d --rm --name mariadb --env MARIADB_ROOT_PASSWORD="finanz" -p 3306:3306 --network finanz_network -v mariadb_data:/var/lib/mysql mariadb
+
+####################################################################
+
+---JAR---
+
+docker build -t deployment-finanz .
+
+docker run -d --rm --name finanz_backend -p 8080:8080 --network finanz_network deployment-finanz
