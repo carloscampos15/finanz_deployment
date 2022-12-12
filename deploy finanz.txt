@@ -6,7 +6,7 @@ docker network create finanz_network
 
 ---MARIADB---
 
-docker run -d --rm --name mariadb --env MARIADB_ROOT_PASSWORD="finanz" -p 3306:3306 --network finanz_network -v mariadb_data:/var/lib/mysql mariadb
+docker run -d --rm --name mariadb -p 3306:3306 --network finanz_network -v mariadb_data:/var/lib/mysql --env MARIADB_USER=finanz --env MARIADB_PASSWORD=finanz --env MARIADB_ROOT_PASSWORD=finanz mariadb
 
 ####################################################################
 
@@ -15,3 +15,14 @@ docker run -d --rm --name mariadb --env MARIADB_ROOT_PASSWORD="finanz" -p 3306:3
 docker build -t deployment-finanz .
 
 docker run -d --rm --name finanz_backend -p 8080:8080 --network finanz_network deployment-finanz
+
+####################################################################
+
+---APK GENERATION---
+
+$ react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+$ cd android
+$ ./gradlew assembleDebug
+
+####################################################################
+
